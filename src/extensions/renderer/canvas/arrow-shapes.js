@@ -49,7 +49,7 @@ function triangleTee( context, trianglePoints, teePoints ){
   if( context.closePath ){ context.closePath(); }
 }
 
-function circleTriangle(context, trianglePoints, rx, ry, r) {
+function triangleCircle(context, trianglePoints, rx, ry, r) {
   if (context.beginPath) { context.beginPath(); }
   context.arc(rx, ry, r, 0, Math.PI * 2, false);    
   var triPts = trianglePoints;
@@ -64,6 +64,46 @@ function circleTriangle(context, trianglePoints, rx, ry, r) {
   }
 }
 
+function squareCircle(context, SquarePoints, rx, ry, r) {
+  if (context.beginPath) { context.beginPath(); }
+  context.arc(rx, ry, r, 0, Math.PI * 2, false);    
+  var sqaPts = SquarePoints;
+  var firstSqPt = sqaPts[0];
+  context.moveTo(firstSqPt.x, firstSqPt.y);
+  for (var i = 0; i < sqaPts.length; i++) {
+    var pt = sqaPts[i];
+    context.lineTo(pt.x, pt.y);
+  }
+  if (context.closePath) {
+    context.closePath();
+  }
+}
+
+
+
+function triangleSquare(context, trianglePoints, squarePoints) {
+  if (context.beginPath) { context.beginPath(); }
+  var triPts = trianglePoints;
+  var sqaPts = squarePoints;
+  var firstTrPt = sqaPts[0];
+  context.moveTo(firstTrPt.x, firstTrPt.y);
+  for (var i = 0; i < triPts.length; i++) {
+    var pt = triPts[i];
+    context.lineTo(pt.x, pt.y);
+  }
+  var firstSqPt = sqaPts[0];
+  context.moveTo(firstSqPt.x, firstSqPt.y);
+  for (var i = 0; i < sqaPts.length; i++) {
+    var pt = sqaPts[i];
+    context.lineTo(pt.x, pt.y);
+  }
+  if (context.closePath) {
+    context.closePath();
+  }
+}
+
+
+
 function circle( context, rx, ry, r ){
   context.arc( rx, ry, r, 0, Math.PI * 2, false );
 }
@@ -76,7 +116,17 @@ CRp.arrowShapeImpl = function( name ){
 
     'triangle-tee': triangleTee,
 
-    'circle-triangle' : circleTriangle,
+    'circle-triangle' : triangleCircle,
+
+    'triangle-circle' : triangleCircle,
+
+    'triangle-square' : triangleSquare,
+
+    'square-triangle' : triangleSquare,
+
+    'circle-square' : squareCircle,
+
+    'square-circle' : squareCircle,
 
     'triangle-cross': triangleTee,
 

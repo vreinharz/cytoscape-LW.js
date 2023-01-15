@@ -190,13 +190,13 @@ BRp.registerArrowShapes = function(){
     }
   } );
 
-  defineArrowShape( 'circle-triangle', {
+  defineArrowShape( 'triangle-circle', {
     radius: 0.15,
-    pointsTr: [0, -0.15, 0.15, -0.45, -0.15, -0.45, 0, -0.15],
+    pointsTr: [0, -0.45, 0.15, -0.15, -0.15, -0.15, 0, -0.45],
     collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
       var t = translation;
       var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
-      var triPts = pointsToArr(transformPoints(this.points, size + 2 * padding, angle, translation));
+      var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
       return math.pointInsidePolygonPoints(x, y, triPts) || circleInside;
     },
     draw: function draw(context, size, angle, translation, edgeWidth) {        
@@ -207,6 +207,109 @@ BRp.registerArrowShapes = function(){
       return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
     }
   } );
+
+defineArrowShape( 'circle-triangle', {
+    radius: 0.15,
+    pointsTr: [0, 0.45, 0.15, 0.15, -0.15, 0.15, 0, 0.45],
+    collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+      var t = translation;
+      var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+      var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+      return math.pointInsidePolygonPoints(x, y, triPts) || circleInside;
+    },
+    draw: function draw(context, size, angle, translation, edgeWidth) {        
+      var triPts = transformPoints(this.pointsTr, size, angle, translation);
+      renderer.arrowShapeImpl(this.name)(context, triPts, translation.x, translation.y, this.radius * size);
+    },
+    spacing: function spacing(edge) {
+      return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+    }
+  } );
+
+defineArrowShape( 'circle-square', {
+    radius: 0.15,
+    pointsSq: [-0.15, 0.15, 0.15, 0.15, 0.15, 0.45, -0.15, 0.45, -0.15, 0.15],
+    collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+      var t = translation;
+      var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+      var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+      return math.pointInsidePolygonPoints(x, y, sqaPts) || circleInside;
+    },
+    draw: function draw(context, size, angle, translation, edgeWidth) {        
+      var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+      renderer.arrowShapeImpl(this.name)(context, sqaPts, translation.x, translation.y, this.radius * size);
+    },
+    spacing: function spacing(edge) {
+      return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+    }
+  } );
+
+
+defineArrowShape( 'square-circle', {
+    radius: 0.15,
+    pointsSq: [-0.15, -0.15, 0.15, -0.15, 0.15, -0.45, -0.15, -0.45, -0.15, -0.15],
+    collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+      var t = translation;
+      var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+      var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+      return math.pointInsidePolygonPoints(x, y, sqaPts) || circleInside;
+    },
+    draw: function draw(context, size, angle, translation, edgeWidth) {        
+      var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+      renderer.arrowShapeImpl(this.name)(context, sqaPts, translation.x, translation.y, this.radius * size);
+    },
+    spacing: function spacing(edge) {
+      return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+    }
+  } );
+
+
+
+defineArrowShape( 'triangle-square', {
+    radius: 0.15,
+    pointsTr: [0, -0.31, 0.15, -0.01, -0.15, -0.01, 0, -0.31],
+    pointsSq: [-0.15, 0.01, 0.15, 0.01, 0.15, 0.31, -0.15, 0.31, -0.15, 0.01],
+    collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+      var t = translation;
+      var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+      var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+      return math.pointInsidePolygonPoints(x, y, triPts) || math.pointInsidePolygonPoints(x, y, sqaPts);
+    },
+    draw: function draw(context, size, angle, translation, edgeWidth) {        
+      var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+      var triPts = transformPoints(this.pointsTr, size, angle, translation);
+      renderer.arrowShapeImpl(this.name)(context, triPts, sqaPts);
+    },
+    spacing: function spacing(edge) {
+      return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+    }
+  } );
+
+defineArrowShape( 'square-triangle', {
+    radius: 0.15,
+    pointsTr: [0, 0.31, 0.15, 0.01, -0.15, 0.01, 0, 0.31],
+    pointsSq: [-0.15, -0.01, 0.15, -0.01, 0.15, -0.31, -0.15, -0.31, -0.15, -0.01],
+    collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+      var t = translation;
+      var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+      var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+      return math.pointInsidePolygonPoints(x, y, triPts) || math.pointInsidePolygonPoints(x, y, sqaPts);
+    },
+    draw: function draw(context, size, angle, translation, edgeWidth) {        
+      var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+      var triPts = transformPoints(this.pointsTr, size, angle, translation);
+      renderer.arrowShapeImpl(this.name)(context, triPts, sqaPts);
+    },
+    spacing: function spacing(edge) {
+      return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+    }
+  } );
+
+
+
+
+
+
 
   defineArrowShape( 'triangle-cross', {
     points: [

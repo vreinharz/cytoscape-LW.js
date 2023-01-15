@@ -73,7 +73,7 @@ const styfn = {};
     ] },
     overlayShape: { enums: [ 'roundrectangle', 'round-rectangle', 'ellipse' ] },
     compoundIncludeLabels: { enums: [ 'include', 'exclude' ] },
-    arrowShape: { enums: [ 'tee', 'triangle', 'triangle-tee', 'circle-triangle', 'triangle-cross', 'triangle-backcurve', 'vee', 'square', 'circle', 'diamond', 'chevron', 'none' ] },
+    arrowShape: { enums: [ 'tee', 'triangle', 'triangle-tee', 'circle-triangle', 'triangle-circle', 'triangle-square', 'square-triangle', 'circle-square', 'square-circle', 'triangle-cross', 'triangle-backcurve', 'vee', 'square', 'circle', 'diamond', 'chevron', 'none' ] },
     arrowFill: { enums: [ 'filled', 'hollow' ] },
     display: { enums: [ 'element', 'none' ] },
     visibility: { enums: [ 'hidden', 'visible' ] },
