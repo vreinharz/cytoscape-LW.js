@@ -18292,7 +18292,7 @@
         enums: ['include', 'exclude']
       },
       arrowShape: {
-        enums: ['tee', 'triangle', 'triangle-tee', 'circle-triangle', 'triangle-cross', 'triangle-backcurve', 'vee', 'square', 'circle', 'diamond', 'chevron', 'none']
+        enums: ['tee', 'triangle', 'triangle-tee', 'circle-triangle', 'triangle-circle', 'triangle-square', 'square-triangle', 'circle-square', 'square-circle', 'triangle-cross', 'triangle-backcurve', 'vee', 'square', 'circle', 'diamond', 'chevron', 'none']
       },
       arrowFill: {
         enums: ['filled', 'hollow']
@@ -23667,18 +23667,105 @@ var printLayoutInfo;
         renderer.arrowShapeImpl(this.name)(context, triPts, teePts);
       }
     });
-    defineArrowShape('circle-triangle', {
+    defineArrowShape('triangle-circle', {
       radius: 0.15,
-      pointsTr: [0, -0.15, 0.15, -0.45, -0.15, -0.45, 0, -0.15],
+      pointsTr: [0, -0.45, 0.15, -0.15, -0.15, -0.15, 0, -0.45],
       collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
         var t = translation;
         var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
-        var triPts = pointsToArr(transformPoints(this.points, size + 2 * padding, angle, translation));
+        var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
         return pointInsidePolygonPoints(x, y, triPts) || circleInside;
       },
       draw: function draw(context, size, angle, translation, edgeWidth) {
         var triPts = transformPoints(this.pointsTr, size, angle, translation);
         renderer.arrowShapeImpl(this.name)(context, triPts, translation.x, translation.y, this.radius * size);
+      },
+      spacing: function spacing(edge) {
+        return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      }
+    });
+    defineArrowShape('circle-triangle', {
+      radius: 0.15,
+      pointsTr: [0, 0.45, 0.15, 0.15, -0.15, 0.15, 0, 0.45],
+      collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+        var t = translation;
+        var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+        var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+        return pointInsidePolygonPoints(x, y, triPts) || circleInside;
+      },
+      draw: function draw(context, size, angle, translation, edgeWidth) {
+        var triPts = transformPoints(this.pointsTr, size, angle, translation);
+        renderer.arrowShapeImpl(this.name)(context, triPts, translation.x, translation.y, this.radius * size);
+      },
+      spacing: function spacing(edge) {
+        return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      }
+    });
+    defineArrowShape('circle-square', {
+      radius: 0.15,
+      pointsSq: [-0.15, 0.15, 0.15, 0.15, 0.15, 0.45, -0.15, 0.45, -0.15, 0.15],
+      collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+        var t = translation;
+        var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+        var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+        return pointInsidePolygonPoints(x, y, sqaPts) || circleInside;
+      },
+      draw: function draw(context, size, angle, translation, edgeWidth) {
+        var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+        renderer.arrowShapeImpl(this.name)(context, sqaPts, translation.x, translation.y, this.radius * size);
+      },
+      spacing: function spacing(edge) {
+        return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      }
+    });
+    defineArrowShape('square-circle', {
+      radius: 0.15,
+      pointsSq: [-0.15, -0.15, 0.15, -0.15, 0.15, -0.45, -0.15, -0.45, -0.15, -0.15],
+      collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+        var t = translation;
+        var circleInside = Math.pow(t.x - x, 2) + Math.pow(t.y - y, 2) <= Math.pow((size + 2 * padding) * this.radius, 2);
+        var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+        return pointInsidePolygonPoints(x, y, sqaPts) || circleInside;
+      },
+      draw: function draw(context, size, angle, translation, edgeWidth) {
+        var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+        renderer.arrowShapeImpl(this.name)(context, sqaPts, translation.x, translation.y, this.radius * size);
+      },
+      spacing: function spacing(edge) {
+        return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      }
+    });
+    defineArrowShape('triangle-square', {
+      radius: 0.15,
+      pointsTr: [0, -0.31, 0.15, -0.01, -0.15, -0.01, 0, -0.31],
+      pointsSq: [-0.15, 0.01, 0.15, 0.01, 0.15, 0.31, -0.15, 0.31, -0.15, 0.01],
+      collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+        var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+        var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+        return pointInsidePolygonPoints(x, y, triPts) || pointInsidePolygonPoints(x, y, sqaPts);
+      },
+      draw: function draw(context, size, angle, translation, edgeWidth) {
+        var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+        var triPts = transformPoints(this.pointsTr, size, angle, translation);
+        renderer.arrowShapeImpl(this.name)(context, triPts, sqaPts);
+      },
+      spacing: function spacing(edge) {
+        return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
+      }
+    });
+    defineArrowShape('square-triangle', {
+      radius: 0.15,
+      pointsTr: [0, 0.31, 0.15, 0.01, -0.15, 0.01, 0, 0.31],
+      pointsSq: [-0.15, -0.01, 0.15, -0.01, 0.15, -0.31, -0.15, -0.31, -0.15, -0.01],
+      collide: function collide(x, y, size, angle, translation, edgeWidth, padding) {
+        var triPts = pointsToArr(transformPoints(this.pointsTr, size + 2 * padding, angle, translation));
+        var sqaPts = pointsToArr(transformPoints(this.pointsSq, size + 2 * padding, angle, translation));
+        return pointInsidePolygonPoints(x, y, triPts) || pointInsidePolygonPoints(x, y, sqaPts);
+      },
+      draw: function draw(context, size, angle, translation, edgeWidth) {
+        var sqaPts = transformPoints(this.pointsSq, size, angle, translation);
+        var triPts = transformPoints(this.pointsTr, size, angle, translation);
+        renderer.arrowShapeImpl(this.name)(context, triPts, sqaPts);
       },
       spacing: function spacing(edge) {
         return renderer.getArrowWidth(edge.pstyle('width').pfValue, edge.pstyle('arrow-scale').value) * this.radius;
@@ -30692,7 +30779,7 @@ var printLayoutInfo;
     }
   }
 
-  function circleTriangle(context, trianglePoints, rx, ry, r) {
+  function triangleCircle(context, trianglePoints, rx, ry, r) {
     if (context.beginPath) {
       context.beginPath();
     }
@@ -30712,6 +30799,54 @@ var printLayoutInfo;
     }
   }
 
+  function squareCircle(context, SquarePoints, rx, ry, r) {
+    if (context.beginPath) {
+      context.beginPath();
+    }
+
+    context.arc(rx, ry, r, 0, Math.PI * 2, false);
+    var sqaPts = SquarePoints;
+    var firstSqPt = sqaPts[0];
+    context.moveTo(firstSqPt.x, firstSqPt.y);
+
+    for (var i = 0; i < sqaPts.length; i++) {
+      var pt = sqaPts[i];
+      context.lineTo(pt.x, pt.y);
+    }
+
+    if (context.closePath) {
+      context.closePath();
+    }
+  }
+
+  function triangleSquare(context, trianglePoints, squarePoints) {
+    if (context.beginPath) {
+      context.beginPath();
+    }
+
+    var triPts = trianglePoints;
+    var sqaPts = squarePoints;
+    var firstTrPt = sqaPts[0];
+    context.moveTo(firstTrPt.x, firstTrPt.y);
+
+    for (var i = 0; i < triPts.length; i++) {
+      var pt = triPts[i];
+      context.lineTo(pt.x, pt.y);
+    }
+
+    var firstSqPt = sqaPts[0];
+    context.moveTo(firstSqPt.x, firstSqPt.y);
+
+    for (var i = 0; i < sqaPts.length; i++) {
+      var pt = sqaPts[i];
+      context.lineTo(pt.x, pt.y);
+    }
+
+    if (context.closePath) {
+      context.closePath();
+    }
+  }
+
   function circle(context, rx, ry, r) {
     context.arc(rx, ry, r, 0, Math.PI * 2, false);
   }
@@ -30721,7 +30856,12 @@ var printLayoutInfo;
       'polygon': polygon,
       'triangle-backcurve': triangleBackcurve,
       'triangle-tee': triangleTee,
-      'circle-triangle': circleTriangle,
+      'circle-triangle': triangleCircle,
+      'triangle-circle': triangleCircle,
+      'triangle-square': triangleSquare,
+      'square-triangle': triangleSquare,
+      'circle-square': squareCircle,
+      'square-circle': squareCircle,
       'triangle-cross': triangleTee,
       'circle': circle
     }))[name];
@@ -33994,7 +34134,7 @@ var printLayoutInfo;
     return style;
   };
 
-  var version = "3.23.0";
+  var version = "snapshot";
 
   var cytoscape = function cytoscape(options) {
     // if no options specified, use default
